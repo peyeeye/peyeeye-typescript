@@ -1,6 +1,6 @@
 {
   "name": "peyeeye",
-  "version": "1.0.3",
+  "version": "1.1.1",
   "description": "Official TypeScript SDK for the peyeeye PII redaction API — detect, redact, and rehydrate personal data in LLM pipelines with deterministic tokens, zero retention, and stateless sealed sessions.",
   "license": "MIT",
   "author": "peyeeye.ai",
@@ -97,6 +97,17 @@
         "default": "./dist/index.cjs"
       },
       "default": "./dist/index.js"
+    },
+    "./vercel-ai": {
+      "import": {
+        "types": "./dist/vercel-ai.d.ts",
+        "default": "./dist/vercel-ai.js"
+      },
+      "require": {
+        "types": "./dist/vercel-ai.d.cts",
+        "default": "./dist/vercel-ai.cjs"
+      },
+      "default": "./dist/vercel-ai.js"
     },
     "./package.json": "./package.json"
   },

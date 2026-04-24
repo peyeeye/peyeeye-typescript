@@ -1,7 +1,13 @@
 # peyeeye
 
 [![npm version](https://img.shields.io/npm/v/peyeeye.svg)](https://www.npmjs.com/package/peyeeye)
+[![npm downloads](https://img.shields.io/npm/dm/peyeeye.svg)](https://www.npmjs.com/package/peyeeye)
+[![bundle size](https://img.shields.io/bundlephobia/minzip/peyeeye)](https://bundlephobia.com/package/peyeeye)
 [![license](https://img.shields.io/npm/l/peyeeye.svg)](https://www.npmjs.com/package/peyeeye)
+[![types: TypeScript](https://img.shields.io/npm/types/peyeeye.svg)](https://www.npmjs.com/package/peyeeye)
+[![provenance](https://img.shields.io/badge/provenance-SLSA-brightgreen)](https://docs.npmjs.com/generating-provenance-statements)
+[![CI](https://github.com/peyeeye/peyeeye-typescript/actions/workflows/test.yml/badge.svg)](https://github.com/peyeeye/peyeeye-typescript/actions/workflows/test.yml)
+[![homepage](https://img.shields.io/badge/homepage-peyeeye.ai-E8B4FF.svg)](https://peyeeye.ai)
 
 Official TypeScript SDK for [peyeeye.ai](https://peyeeye.ai) — redact PII on the
 way _into_ your LLM prompts and rehydrate it on the way out. One round-trip,
@@ -16,6 +22,25 @@ deterministic tokens, zero data retention by default.
 ```bash
 npm install peyeeye
 ```
+
+## Get an API key
+
+1. Sign up at **<https://peyeeye.ai/signup>** (free plan, no card required —
+   1 M characters / month, all 30+ built-in detectors).
+2. Head to **<https://peyeeye.ai/dashboard/keys>** → **New key**.
+3. Copy the full `pk_live_…` (or `pk_test_…`) token shown once — only a hash is
+   stored after you close the dialog. Drop it into your env:
+
+```bash
+export PEYEEYE_KEY=pk_live_...
+```
+
+Test keys bypass billing and are rate-limited for development; live keys count
+against your plan. Paid tiers (Build / Pro / Scale) unlock streaming, custom
+detectors, and higher throughput — see <https://peyeeye.ai/pricing>.
+
+Never ship an API key to the browser — call `/redact` and `/rehydrate` from
+your server or edge runtime.
 
 ## Quickstart
 
@@ -180,6 +205,36 @@ Plan gates: Free 0, Build 3, Pro 10, Scale unlimited. Over-cap returns
 await peyeeye.getSession("ses_…");    // → SessionInfo
 await peyeeye.deleteSession("ses_…"); // drop immediately, don't wait for TTL
 ```
+
+## Framework integrations
+
+### Vercel AI SDK
+
+Drop-in middleware for `wrapLanguageModel` — redacts prompt text before the
+model sees it, rehydrates tokens in the response, and buffers partial
+placeholders across streamed chunks. One fresh session per model call, so
+tokens never leak between requests.
+
+```ts
+import { wrapLanguageModel } from "ai";
+import { openai } from "@ai-sdk/openai";
+import { Peyeeye } from "peyeeye";
+import { peyeeyeMiddleware } from "peyeeye/vercel-ai";
+
+const peyeeye = new Peyeeye({ apiKey: process.env.PEYEEYE_KEY! });
+
+const model = wrapLanguageModel({
+  model: openai("gpt-4o-mini"),
+  middleware: peyeeyeMiddleware({ peyeeye }),
+});
+
+// Use `model` anywhere the SDK expects a LanguageModel — generateText,
+// streamText, generateObject — prompts are redacted in, responses rehydrated
+// out, with zero extra app code.
+```
+
+Opt into stateless sealed mode (no server-side mapping) with
+`peyeeyeMiddleware({ peyeeye, stateless: true })`.
 
 ## Errors
 
