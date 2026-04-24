@@ -20,7 +20,7 @@ import type {
 } from "./types.js";
 
 const DEFAULT_BASE_URL = "https://api.peyeeye.ai";
-const SDK_VERSION = "1.0.1";
+const SDK_VERSION = "1.0.2";
 const USER_AGENT = `peyeeye-js/${SDK_VERSION}`;
 const RETRYABLE_STATUSES = new Set([429, 500, 502, 503, 504]);
 
