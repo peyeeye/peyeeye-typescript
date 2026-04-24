@@ -1,0 +1,59 @@
+name: Publish to npm
+
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    name: Test + build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+          registry-url: "https://registry.npmjs.org"
+      - run: npm ci
+      - run: npm run typecheck
+      - run: npm test
+      - run: npm run build
+
+  publish:
+    name: Publish to npm (trusted publishing)
+    needs: test
+    runs-on: ubuntu-latest
+    environment:
+      name: npm
+      url: https://www.npmjs.com/package/peyeeye
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+          registry-url: "https://registry.npmjs.org"
+      - run: npm ci
+      - name: Verify tag matches package.json version
+        if: github.event_name == 'release'
+        shell: bash
+        run: |
+          pkg_version=$(node -p "require('./package.json').version")
+          tag_version="${GITHUB_REF_NAME#v}"
+          if [[ "$tag_version" != "$pkg_version" ]]; then
+            echo "::error::Release tag ($tag_version) does not match package.json version ($pkg_version)"
+            exit 1
+          fi
+      - run: npm run build
+      # --provenance + id-token: write issues an OIDC token to npm.
+      # With a Trusted Publisher configured at npmjs.com, no NPM_TOKEN is
+      # needed — the token is minted per-publish and scoped to this workflow.
+      - run: npm publish --provenance --access public
