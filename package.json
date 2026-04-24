@@ -1,0 +1,81 @@
+{
+  "name": "peyeeye",
+  "version": "1.0.0",
+  "description": "Official TypeScript SDK for the peyeeye PII redaction API — detect, redact, and rehydrate personal data in LLM pipelines with deterministic tokens, zero retention, and stateless sealed sessions.",
+  "license": "MIT",
+  "author": "peyeeye.ai",
+  "homepage": "https://peyeeye.ai",
+  "keywords": [
+    "pii",
+    "pii-detection",
+    "pii-redaction",
+    "redaction",
+    "rehydrate",
+    "privacy",
+    "gdpr",
+    "hipaa",
+    "ccpa",
+    "llm",
+    "ai",
+    "ai-safety",
+    "data-masking",
+    "tokenization",
+    "anonymization",
+    "sensitive-data",
+    "compliance",
+    "presidio",
+    "data-privacy",
+    "openai",
+    "anthropic",
+    "claude",
+    "gpt",
+    "rag",
+    "prompt-engineering",
+    "data-protection",
+    "security",
+    "typescript",
+    "nodejs",
+    "edge",
+    "cloudflare-workers"
+  ],
+  "type": "module",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.js"
+      },
+      "require": {
+        "types": "./dist/index.d.cts",
+        "default": "./dist/index.cjs"
+      },
+      "default": "./dist/index.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "sideEffects": false,
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "build": "tsup",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "prepublishOnly": "npm run typecheck && npm test && npm run build"
+  },
+  "devDependencies": {
+    "@types/node": "^22.7.0",
+    "tsup": "^8.3.0",
+    "typescript": "^5.6.0",
+    "vitest": "^2.1.0"
+  }
+}
