@@ -236,6 +236,31 @@ const model = wrapLanguageModel({
 Opt into stateless sealed mode (no server-side mapping) with
 `peyeeyeMiddleware({ peyeeye, stateless: true })`.
 
+### LangChain.js
+
+Wrap any LangChain.js `Runnable` (chat model, LLM, or chain). Redacts the
+prompt before `.invoke()`, rehydrates tokens in the response, and opens a
+fresh session per call.
+
+```ts
+import { ChatOpenAI } from "@langchain/openai";
+import { Peyeeye } from "peyeeye";
+import { withPeyeeye } from "peyeeye/langchain";
+
+const peyeeye = new Peyeeye({ apiKey: process.env.PEYEEYE_KEY! });
+const model   = withPeyeeye(new ChatOpenAI({ model: "gpt-4o-mini" }), { peyeeye });
+
+const reply = await model.invoke("Hi, I'm Ada — ada@a-e.com");
+```
+
+Accepted inputs: plain strings, `BaseMessage` arrays, tuple shorthand
+(`["human", "text"]`), dict messages (`{ role, content }`), and multimodal
+content arrays — image parts pass through untouched. Exposes `.invoke()`
+and `.batch()`. For LCEL composition (`.pipe(...)`) wrap with
+`RunnableLambda.from((x) => wrapped.invoke(x))`.
+
+Opt into stateless sealed mode with `withPeyeeye(model, { peyeeye, stateless: true })`.
+
 ## Errors
 
 Every non-2xx raises `PeyeeyeError`:

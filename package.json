@@ -109,6 +109,17 @@
       },
       "default": "./dist/vercel-ai.js"
     },
+    "./langchain": {
+      "import": {
+        "types": "./dist/langchain.d.ts",
+        "default": "./dist/langchain.js"
+      },
+      "require": {
+        "types": "./dist/langchain.d.cts",
+        "default": "./dist/langchain.cjs"
+      },
+      "default": "./dist/langchain.js"
+    },
     "./package.json": "./package.json"
   },
   "files": [
