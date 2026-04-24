@@ -1,10 +1,17 @@
 {
   "name": "peyeeye",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Official TypeScript SDK for the peyeeye PII redaction API — detect, redact, and rehydrate personal data in LLM pipelines with deterministic tokens, zero retention, and stateless sealed sessions.",
   "license": "MIT",
   "author": "peyeeye.ai",
-  "homepage": "https://peyeeye.ai",
+  "homepage": "https://github.com/peyeeye/peyeeye-typescript#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/peyeeye/peyeeye-typescript.git"
+  },
+  "bugs": {
+    "url": "https://github.com/peyeeye/peyeeye-typescript/issues"
+  },
   "keywords": [
     "pii",
     "pii-detection",
