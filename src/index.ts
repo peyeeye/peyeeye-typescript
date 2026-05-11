@@ -11,6 +11,9 @@
  * console.log(await shield.rehydrate(reply));
  * ```
  *
+ * A single `Peyeeye` instance is safe to share across concurrent
+ * requests; create one at startup and reuse it.
+ *
  * See https://peyeeye.ai/docs for the full API reference.
  */
 
